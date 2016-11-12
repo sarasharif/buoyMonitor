@@ -24,7 +24,7 @@ function showFavBuoys() {
 
 function getAllBuoys() {
   $.get("/api/allBuoys", function (data) {
-    console.log(data);
+    setupAllBuoys(data.rss.channel[0].item);
   });
 }
 
@@ -32,4 +32,28 @@ function getFavBuoys() {
   $.get("/api/favBuoys", function (data) {
     console.log(data);
   });
+}
+
+function setupAllBuoys(buoys) {
+  const htmlBuoys = createAllBuoysHtml(buoys);
+  $(".allBuoys").html(htmlBuoys);
+}
+
+function createAllBuoysHtml(buoys) {
+  let htmlBuoys = '<h1>Buoys within 100 miles of NYC</h1>';
+  if (buoys.length === 0) {
+    return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
+  } else {
+    htmlBuoys += '<div class="wrapper">';
+    buoys.forEach(function(buoy) {
+      if (buoy.title[0].toUpperCase() === "SHIP") {
+        return;
+      } else {
+        htmlBuoys += `<div class="buoy">
+                        <span>${buoy.title}</span>
+                      </div>`;
+      }
+    });
+    return htmlBuoys += '</div>'
+  }
 }
