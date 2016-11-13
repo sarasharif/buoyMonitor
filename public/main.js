@@ -13,7 +13,8 @@ $(document).ready(function(){
 function showAllBuoys() {
   $(".allBuoys").removeClass("hidden").html('<h1>....loading buoys within radius...</h1>');
   $(".favBuoys").addClass("hidden");
-  getAllBuoys();
+  const links = getFavLinks();
+  getAllBuoys(links);
 }
 
 function showFavBuoys() {
@@ -22,9 +23,9 @@ function showFavBuoys() {
   getFavBuoys();
 }
 
-function getAllBuoys() {
+function getAllBuoys(links) {
   $.get("/api/allBuoys", function (data) {
-    setupAllBuoys(data.rss.channel[0].item);
+    setupAllBuoys(links, data.rss.channel[0].item);
   });
 }
 
@@ -34,21 +35,34 @@ function getFavBuoys() {
   });
 }
 
-function setupAllBuoys(buoys) {
-  const htmlBuoys = createAllBuoysHtml(buoys);
+function getFavLinks() {
+  links = [];
+  $.get("/api/favBuoys", function( buoys ) {
+    buoys.forEach(function ( buoy ) {
+      links.push(buoy.link);
+    });
+  });
+  return links;
+}
+
+function setupAllBuoys(links, buoys) {
+  const htmlBuoys = createAllBuoysHtml(links, buoys);
   $(".allBuoys").html(htmlBuoys);
   setupFavoriteToggle($(".favtoggle").toArray());
 }
 
-function createAllBuoysHtml(buoys) {
+function createAllBuoysHtml(links, buoys) {
   let htmlBuoys = '<h1>Buoys within 100 miles of NYC</h1>';
   if (buoys.length === 0) {
     return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
   } else {
     htmlBuoys += '<div class="wrapper">';
     buoys.forEach(function(buoy) {
-      if (buoy.title[0].toUpperCase() === "SHIP") {
-        return;
+      if (links.includes(buoy.link[0])) {
+        htmlBuoys += `<div class="buoy">
+                        <span>${buoy.title}</span>
+                        <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                      </div>`;
       } else {
         htmlBuoys += `<div class="buoy">
                         <span>${buoy.title}</span>
