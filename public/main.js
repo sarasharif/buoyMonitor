@@ -78,6 +78,7 @@ function setupFavBuoys(buoys) {
   const htmlBuoys = createFavBuoysHtml(buoys);
   $(".favBuoys").html(htmlBuoys);
   setupFavoriteToggle($(".favtoggle").toArray());  
+  setupDetailsToggle($(".data-toggle").toArray());
 }
 
 function createFavBuoysHtml(buoys) {
@@ -90,7 +91,7 @@ function createFavBuoysHtml(buoys) {
       htmlBuoys += `<div class="buoy">
                       <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                       <span>${buoy.title}</span>
-                      <button>+</button>
+                      <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                     </div>`;
     });
     return htmlBuoys += '</div>'
@@ -122,6 +123,32 @@ function unfavorite(button) {
   deleteFavBuoy(button);
 }
 
+function setupDetailsToggle(buttons) {
+  buttons.forEach(function(button) {
+    button.onclick = function() {
+      toggleBuoyData(button);
+    };
+  });
+}
+
+function toggleBuoyData(button) {
+  if (button.classList.contains("closed")) {
+    $(button).removeClass("closed");
+    getBuoyData(button);
+  } else {
+    $(button).addClass("closed");
+    removeDataFromFavoriteBuoy(button);
+  }
+}
+
+function appendDataAfterFavoriteBuoy(button, data) {
+  $(button).parent().after('<div>'+data[0]+'</div>');
+}
+
+function removeDataFromFavoriteBuoy(button){
+  $(button).parent().next().remove();
+}
+
 function createFavBuoy(button) {
   $.ajax({
     url: "/api/favBuoys/",
@@ -138,5 +165,16 @@ function deleteFavBuoy(button) {
     method: 'DELETE',
     data: {'link': button.dataset.link},
     url: "/api/favBuoys/",
+  });
+}
+
+function getBuoyData(button) {
+  $.get({
+    url: "/api/buoyStats/",
+    data: {'link': button.dataset.link},
+    success: function (data) {
+      const details = data.rss.channel[0].item[0].description;
+      appendDataAfterFavoriteBuoy(button, details);
+    }
   });
 }

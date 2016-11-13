@@ -55,5 +55,15 @@ router.delete('/favbuoys', (req, res) => {
   });
 });
 
+router.get('/buoyStats', (req, res) => {
+  const station_id = req.query.link.slice(-5);
+  const url = `http://www.ndbc.noaa.gov/data/latest_obs/${station_id}.rss`
+  request(url, function(err, response, xml) {
+    parseString(xml, function (err, buoy) {
+      res.json(buoy);
+    });
+  });
+});
+
 app.use('/api', router);
 app.listen(process.env.PORT||8000);
