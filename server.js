@@ -45,5 +45,15 @@ router.get('/favBuoys', (req, res) => {
   });
 });
 
+router.delete('/favbuoys', (req, res) => {
+  Buoy.remove({
+    link : req.body.link.toString()
+  }, function(err, buoy) {
+    Buoy.find(function(err, buoys) {
+      res.json(buoys);
+    });
+  });
+});
+
 app.use('/api', router);
 app.listen(process.env.PORT||8000);

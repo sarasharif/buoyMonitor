@@ -105,7 +105,7 @@ function favorite(button) {
 
 function unfavorite(button) {
   $(button).removeClass("favorite");
-  console.log("unfavoriting now!");
+  deleteFavBuoy(button);
 }
 
 function createFavBuoy(button) {
@@ -116,5 +116,13 @@ function createFavBuoy(button) {
     success: function (data) {
       console.log(data);
     }
+  });
+}
+
+function deleteFavBuoy(button) {
+  $.ajax({
+    method: 'DELETE',
+    data: {'link': button.dataset.link},
+    url: "/api/favBuoys/",
   });
 }
