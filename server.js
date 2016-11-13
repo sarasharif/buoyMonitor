@@ -39,7 +39,10 @@ router.post('/favBuoys', (req, res) => {
 });
 
 router.get('/favBuoys', (req, res) => {
-  res.send("datum!");
+  Buoy.find(function(err, buoys) {
+    if (err) { res.send(err); }
+    res.json(buoys);
+  });
 });
 
 app.use('/api', router);

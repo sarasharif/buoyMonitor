@@ -30,7 +30,7 @@ function getAllBuoys() {
 
 function getFavBuoys() {
   $.get("/api/favBuoys", function (data) {
-    console.log(data);
+    setupFavBuoys(data);
   });
 }
 
@@ -55,6 +55,29 @@ function createAllBuoysHtml(buoys) {
                         <button class="favtoggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                       </div>`;
       }
+    });
+    return htmlBuoys += '</div>'
+  }
+}
+
+function setupFavBuoys(buoys) {
+  const htmlBuoys = createFavBuoysHtml(buoys);
+  $(".favBuoys").html(htmlBuoys);
+  setupFavoriteToggle($(".favtoggle").toArray());  
+}
+
+function createFavBuoysHtml(buoys) {
+  let htmlBuoys = '<h1>Favorite Buoys</h1>';
+  if (buoys.length === 0) {
+    return htmlBuoys += '<h2>... you don\'t have any favorite buoys ...</h2>';
+  } else {
+    htmlBuoys += '<div class="wrapper">';
+    buoys.forEach( function(buoy) {
+      htmlBuoys += `<div class="buoy">
+                      <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                      <span>${buoy.title}</span>
+                      <button>+</button>
+                    </div>`;
     });
     return htmlBuoys += '</div>'
   }
