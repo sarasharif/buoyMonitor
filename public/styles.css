@@ -1,3 +1,7 @@
 .hidden {
   visibility: hidden;
 }
+
+.favorite {
+  background-color: lightcoral;
+}

@@ -37,6 +37,7 @@ function getFavBuoys() {
 function setupAllBuoys(buoys) {
   const htmlBuoys = createAllBuoysHtml(buoys);
   $(".allBuoys").html(htmlBuoys);
+  setupFavoriteToggle($(".favtoggle").toArray());
 }
 
 function createAllBuoysHtml(buoys) {
@@ -51,9 +52,46 @@ function createAllBuoysHtml(buoys) {
       } else {
         htmlBuoys += `<div class="buoy">
                         <span>${buoy.title}</span>
+                        <button class="favtoggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                       </div>`;
       }
     });
     return htmlBuoys += '</div>'
   }
+}
+
+function setupFavoriteToggle(buttons) {
+  buttons.forEach(function(button) {
+    button.onclick = function() {
+      toggleFavorite(button);
+    };
+  });
+}
+
+function toggleFavorite(button) {
+  if (button.classList.contains("favorite")) {
+    unfavorite(button);
+  } else {
+    favorite(button);
+  }
+}
+function favorite(button) {
+  $(button).addClass("favorite");
+  createFavBuoy(button);
+}
+
+function unfavorite(button) {
+  $(button).removeClass("favorite");
+  console.log("unfavoriting now!");
+}
+
+function createFavBuoy(button) {
+  $.ajax({
+    url: "/api/favBuoys/",
+    method: 'POST',
+    data: {'link': button.dataset.link, 'title': button.dataset.title},
+    success: function (data) {
+      console.log(data);
+    }
+  });
 }
