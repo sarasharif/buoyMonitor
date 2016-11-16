@@ -58,7 +58,9 @@ function createAllBuoysHtml(links, buoys) {
   } else {
     htmlBuoys += '<div class="wrapper">';
     buoys.forEach(function(buoy) {
-      if (links.includes(buoy.link[0])) {
+      if (buoy.title[0].toUpperCase() === "SHIP") {
+        htmlBuoys += "";
+      } else if (links.includes(buoy.link[0])) {
         htmlBuoys += `<div class="buoy">
                         <span>${buoy.title}</span>
                         <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
@@ -154,9 +156,6 @@ function createFavBuoy(button) {
     url: "/api/favBuoys/",
     method: 'POST',
     data: {'link': button.dataset.link, 'title': button.dataset.title},
-    success: function (data) {
-      console.log(data);
-    }
   });
 }
 

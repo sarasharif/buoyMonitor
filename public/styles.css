@@ -1,7 +1,48 @@
+* {
+  color: slate;
+  margin: 4px;
+  padding: 10px;
+}
+
+nav, section {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+
 .hidden {
   visibility: hidden;
 }
 
 .favorite {
   background-color: lightcoral;
+}
+
+#section-wrapper{
+  position: relative;
+}
+
+section {
+  position: absolute;
+}
+
+button {
+  background-color: white;
+  border: 3px solid lightgray;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buoy {
+  display: flex;
+  border: 1px dashed gray;
+  border-radius: 4px;
+  justify-content: space-between;
+}
+
+div.wrapper {
+  display: flex;
+  flex-direction: column;
 }

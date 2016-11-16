@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <link rel="shortcut icon" href="Buoy-52.png">
     <title>buoyMonitor</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="main.js"></script>
   </head>
+
   <body>
-    <h1>buoyMonitor</h1>
-    <button id='showAll'>REDO SEARCH</button>
-    <button id='showFavs'>YOUR FAVORITES</button>
-    
-    <section class='allBuoys'>
-    </section>
-    
-    <section class='favBuoys'>
-    </section>
-    
-    
+    <nav>
+      <h1>buoyMonitor</h1>
+      <div>
+        <button id='showAll'>REDO SEARCH</button>
+        <button id='showFavs'>YOUR FAVORITES</button>
+      </div>
+    </nav>
+
+    <div id='section-wrapper'>
+      <section class='allBuoys'>
+        <h1>Loading nearby buoys....</h1>
+      </section>
+
+      <section class='favBuoys hidden'>
+        <h1>Loading favorite buoys...</h1>
+      </section>
+    <div>
+
   </body>
 </html>
