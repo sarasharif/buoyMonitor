@@ -1,8 +1,11 @@
 module.exports = {
 
-  showAndHide: function(show, hide) {
-    show.removeClass("hidden").html('<h1>...loading...</h1>');
-    hide.addClass("hidden");
+  show: function(element) {
+    element.removeClass("hidden").html('<h1>...loading...</h1>');
+  },
+
+  hide: function(element) {
+    element.addClass("hidden");
   },
 
   createAllBuoysHtml: function(links, buoys) {
@@ -14,7 +17,7 @@ module.exports = {
       buoys.forEach(function(buoy) {
         if (buoy.title[0].toUpperCase() === "SHIP") {
           htmlBuoys += "";
-        } else if (links.includes(buoy.link[0])) {
+        } else if (links[buoy.link[0]]) {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
                           <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
@@ -43,7 +46,7 @@ module.exports = {
                         <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                       </div>`;
       });
-      return htmlBuoys += '</div>'
+      return htmlBuoys += '</div>';
     }
   },
 

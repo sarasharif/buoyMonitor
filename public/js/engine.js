@@ -19,12 +19,12 @@ module.exports = {
   },
 
   getFavLinks: function () {
-    let links = [];
+    let links = {};
     $.ajax({
       url: "/api/favBuoys",
       success: function(buoys) {
-        buoys.forEach(function ( buoy ) {
-          links.push(buoy.link);
+        buoys.forEach(function (buoy) {
+          links[buoy.link] = true;
         });
       }
     });
@@ -57,6 +57,5 @@ module.exports = {
       }
     });
   },
-
 
 };

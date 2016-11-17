@@ -1,9 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
 
-  showAndHide: function(show, hide) {
-    show.removeClass("hidden").html('<h1>...loading...</h1>');
-    hide.addClass("hidden");
+  show: function(element) {
+    element.removeClass("hidden").html('<h1>...loading...</h1>');
+  },
+
+  hide: function(element) {
+    element.addClass("hidden");
   },
 
   createAllBuoysHtml: function(links, buoys) {
@@ -15,7 +18,7 @@ module.exports = {
       buoys.forEach(function(buoy) {
         if (buoy.title[0].toUpperCase() === "SHIP") {
           htmlBuoys += "";
-        } else if (links.includes(buoy.link[0])) {
+        } else if (links[buoy.link[0]]) {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
                           <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
@@ -44,7 +47,7 @@ module.exports = {
                         <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                       </div>`;
       });
-      return htmlBuoys += '</div>'
+      return htmlBuoys += '</div>';
     }
   },
 
@@ -59,19 +62,21 @@ module.exports = {
 
 },{}],2:[function(require,module,exports){
 const Engine = require('./engine');
-const Appender = require('./appender');
+const Build = require('./build');
 
 module.exports = {
 
   showAllBuoys: function() {
-    Appender.showAndHide($("#allBuoys"),$("#favBuoys"));
+    Build.show($("#allBuoys"));
+    Build.hide($("#favBuoys"));
     const links = Engine.getFavLinks();
-    Engine.getAllBuoys(links, this.setupAllBuoys);
+    Engine.getAllBuoys(links, this.appendAllBuoys);
   },
 
   showFavBuoys: function() {
-    Appender.showAndHide($("#favBuoys"),$("#allBuoys"));
-    Engine.getFavBuoys(this.setupFavBuoys);
+    Build.show($("#favBuoys"));
+    Build.hide($("#allBuoys"));
+    Engine.getFavBuoys(this.appendFavBuoys);
   },
 
   toggleFavorite: function() {
@@ -89,27 +94,27 @@ module.exports = {
     const button = event.target;
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
-      Engine.getBuoyData(button, Appender.appendDataAfterFavoriteBuoy);
+      Engine.getBuoyData(button, Build.appendDataAfterFavoriteBuoy);
     } else {
       $(button).addClass("closed");
-      Appender.removeDataFromFavoriteBuoy(button);
+      Build.removeDataFromFavoriteBuoy(button);
     }
   },
 
-  setupAllBuoys: function(links, data) {
+  appendAllBuoys: function(links, data) {
     const buoys = data.rss.channel[0].item;
-    const htmlBuoys = Appender.createAllBuoysHtml(links, buoys);
+    const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
     $("#allBuoys").html(htmlBuoys);
   },
 
-  setupFavBuoys: function(buoys) {
-    const htmlBuoys = Appender.createFavBuoysHtml(buoys);
+  appendFavBuoys: function(buoys) {
+    const htmlBuoys = Build.createFavBuoysHtml(buoys);
     $("#favBuoys").html(htmlBuoys);
   },
 
 };
 
-},{"./appender":1,"./engine":3}],3:[function(require,module,exports){
+},{"./build":1,"./engine":3}],3:[function(require,module,exports){
 module.exports = {
 
   getAllBuoys: function (links, callback) {
@@ -131,12 +136,12 @@ module.exports = {
   },
 
   getFavLinks: function () {
-    let links = [];
+    let links = {};
     $.ajax({
       url: "/api/favBuoys",
       success: function(buoys) {
-        buoys.forEach(function ( buoy ) {
-          links.push(buoy.link);
+        buoys.forEach(function (buoy) {
+          links[buoy.link] = true;
         });
       }
     });
@@ -169,7 +174,6 @@ module.exports = {
       }
     });
   },
-
 
 };
 

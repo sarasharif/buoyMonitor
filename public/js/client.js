@@ -1,17 +1,19 @@
 const Engine = require('./engine');
-const Appender = require('./appender');
+const Build = require('./build');
 
 module.exports = {
 
   showAllBuoys: function() {
-    Appender.showAndHide($("#allBuoys"),$("#favBuoys"));
+    Build.show($("#allBuoys"));
+    Build.hide($("#favBuoys"));
     const links = Engine.getFavLinks();
-    Engine.getAllBuoys(links, this.setupAllBuoys);
+    Engine.getAllBuoys(links, this.appendAllBuoys);
   },
 
   showFavBuoys: function() {
-    Appender.showAndHide($("#favBuoys"),$("#allBuoys"));
-    Engine.getFavBuoys(this.setupFavBuoys);
+    Build.show($("#favBuoys"));
+    Build.hide($("#allBuoys"));
+    Engine.getFavBuoys(this.appendFavBuoys);
   },
 
   toggleFavorite: function() {
@@ -29,21 +31,21 @@ module.exports = {
     const button = event.target;
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
-      Engine.getBuoyData(button, Appender.appendDataAfterFavoriteBuoy);
+      Engine.getBuoyData(button, Build.appendDataAfterFavoriteBuoy);
     } else {
       $(button).addClass("closed");
-      Appender.removeDataFromFavoriteBuoy(button);
+      Build.removeDataFromFavoriteBuoy(button);
     }
   },
 
-  setupAllBuoys: function(links, data) {
+  appendAllBuoys: function(links, data) {
     const buoys = data.rss.channel[0].item;
-    const htmlBuoys = Appender.createAllBuoysHtml(links, buoys);
+    const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
     $("#allBuoys").html(htmlBuoys);
   },
 
-  setupFavBuoys: function(buoys) {
-    const htmlBuoys = Appender.createFavBuoysHtml(buoys);
+  appendFavBuoys: function(buoys) {
+    const htmlBuoys = Build.createFavBuoysHtml(buoys);
     $("#favBuoys").html(htmlBuoys);
   },
 
