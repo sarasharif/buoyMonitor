@@ -67,3 +67,4 @@ router.get('/buoyStats', (req, res) => {
 
 app.use('/api', router);
 app.listen(process.env.PORT||8000);
+console.log("point browser to localhost:8000");
