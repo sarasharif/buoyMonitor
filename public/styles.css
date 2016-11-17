@@ -4,6 +4,10 @@
   padding: 10px;
 }
 
+#section-wrapper{
+  position: relative;
+}
+
 nav, section {
   align-items: center;
   display: flex;
@@ -12,20 +16,16 @@ nav, section {
   width: 100%;
 }
 
+section {
+  position: absolute;
+}
+
 .hidden {
   visibility: hidden;
 }
 
 .favorite {
   background-color: lightcoral;
-}
-
-#section-wrapper{
-  position: relative;
-}
-
-section {
-  position: absolute;
 }
 
 button {

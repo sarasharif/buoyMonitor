@@ -1,5 +1,10 @@
 module.exports = {
 
+  showAndHide: function(show, hide) {
+    show.removeClass("hidden").html('<h1>...loading...</h1>');
+    hide.addClass("hidden");
+  },
+
   createAllBuoysHtml: function(links, buoys) {
     let htmlBuoys = '<h1>Buoys within 100 miles of NYC</h1>';
     if (buoys.length === 0) {
