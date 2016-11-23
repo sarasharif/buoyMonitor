@@ -52,11 +52,14 @@ module.exports = {
   },
 
   appendDataAfterFavoriteBuoy: function(button, data) {
-    $(button).parent().after('<div>'+data[0]+'</div>');
+    $(button).text("-");
+    $(button).parent().next().remove(".buoyData");
+    $(button).parent().after('<div class="buoyData">'+data[0]+'</div>');
   },
 
   removeDataFromFavoriteBuoy: function(button){
-    $(button).parent().next().remove();
+    $(button).text("+");
+    $(button).parent().next().remove(".buoyData");
   },
 };
 
