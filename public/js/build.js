@@ -14,7 +14,7 @@ module.exports = {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';
-      buoys.forEach(function(buoy) {
+      buoys.forEach((buoy) => {
         if (buoy.title[0].toUpperCase() === "SHIP") {
           htmlBuoys += "";
         } else if (links[buoy.link[0]]) {
@@ -39,7 +39,7 @@ module.exports = {
       return htmlBuoys += '<h2>... you don\'t have any favorite buoys ...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';
-      buoys.forEach( function(buoy) {
+      buoys.forEach((buoy) => {
         htmlBuoys += `<div class="buoy">
                         <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         <span>${buoy.title}</span>

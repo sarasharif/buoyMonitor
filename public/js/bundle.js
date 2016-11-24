@@ -15,7 +15,7 @@ module.exports = {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';
-      buoys.forEach(function(buoy) {
+      buoys.forEach((buoy) => {
         if (buoy.title[0].toUpperCase() === "SHIP") {
           htmlBuoys += "";
         } else if (links[buoy.link[0]]) {
@@ -40,7 +40,7 @@ module.exports = {
       return htmlBuoys += '<h2>... you don\'t have any favorite buoys ...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';
-      buoys.forEach( function(buoy) {
+      buoys.forEach((buoy) => {
         htmlBuoys += `<div class="buoy">
                         <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         <span>${buoy.title}</span>
@@ -76,13 +76,13 @@ module.exports = {
     Build.hide($("#favBuoys"));
 
     let links = {};
-    Engine.getFavBuoys().done(function(data) {
-      data.forEach(function(buoy) {
+    Engine.getFavBuoys().done((data) => {
+      data.forEach((buoy) => {
         links[buoy.link] = true;
       });
     });
 
-    Engine.getAllBuoys().done(function(data) {
+    Engine.getAllBuoys().done((data) => {
       const buoys = data.rss.channel[0].item;
       const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
       $("#allBuoys").html(htmlBuoys);
@@ -93,7 +93,7 @@ module.exports = {
     Build.show($("#favBuoys"));
     Build.hide($("#allBuoys"));
 
-    Engine.getFavBuoys().done(function(data) {
+    Engine.getFavBuoys().done((data) => {
       const htmlBuoys = Build.createFavBuoysHtml(data);
       $("#favBuoys").html(htmlBuoys);
     });
@@ -115,7 +115,7 @@ module.exports = {
 
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
-      Engine.getBuoyData(button).done(function(data) {
+      Engine.getBuoyData(button).done((data) => {
         const details = data.rss.channel[0].item[0].description;
         Build.appendDataAfterFavoriteBuoy(button, details);
       });
@@ -170,26 +170,26 @@ module.exports = {
 },{}],4:[function(require,module,exports){
 const Client = require('./client');
 
-$(document).ready(function(){
+$(document).ready( () => {
   Client.showAllBuoys();
 
-  $("#showAll").click(function() {
+  $("#showAll").click( () =>  {
     Client.showAllBuoys();
   });
 
-  $("#showFavs").click(function() {
+  $("#showFavs").click( () =>  {
     Client.showFavBuoys();
   });
 
-  $("#allBuoys").on("click", ".favtoggle", function() {
+  $("#allBuoys").on("click", ".favtoggle", () =>  {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".favtoggle", function() {
+  $("#favBuoys").on("click", ".favtoggle", () =>  {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".data-toggle", function() {
+  $("#favBuoys").on("click", ".data-toggle", () =>  {
     Client.toggleBuoyData();
   });
 

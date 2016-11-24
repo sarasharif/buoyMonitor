@@ -1,25 +1,25 @@
 const Client = require('./client');
 
-$(document).ready(function(){
+$(document).ready( () => {
   Client.showAllBuoys();
 
-  $("#showAll").click(function() {
+  $("#showAll").click( () =>  {
     Client.showAllBuoys();
   });
 
-  $("#showFavs").click(function() {
+  $("#showFavs").click( () =>  {
     Client.showFavBuoys();
   });
 
-  $("#allBuoys").on("click", ".favtoggle", function() {
+  $("#allBuoys").on("click", ".favtoggle", () =>  {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".favtoggle", function() {
+  $("#favBuoys").on("click", ".favtoggle", () =>  {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".data-toggle", function() {
+  $("#favBuoys").on("click", ".data-toggle", () =>  {
     Client.toggleBuoyData();
   });
 

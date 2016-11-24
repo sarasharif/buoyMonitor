@@ -8,13 +8,13 @@ module.exports = {
     Build.hide($("#favBuoys"));
 
     let links = {};
-    Engine.getFavBuoys().done(function(data) {
-      data.forEach(function(buoy) {
+    Engine.getFavBuoys().done((data) => {
+      data.forEach((buoy) => {
         links[buoy.link] = true;
       });
     });
 
-    Engine.getAllBuoys().done(function(data) {
+    Engine.getAllBuoys().done((data) => {
       const buoys = data.rss.channel[0].item;
       const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
       $("#allBuoys").html(htmlBuoys);
@@ -25,7 +25,7 @@ module.exports = {
     Build.show($("#favBuoys"));
     Build.hide($("#allBuoys"));
 
-    Engine.getFavBuoys().done(function(data) {
+    Engine.getFavBuoys().done((data) => {
       const htmlBuoys = Build.createFavBuoysHtml(data);
       $("#favBuoys").html(htmlBuoys);
     });
@@ -47,7 +47,7 @@ module.exports = {
 
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
-      Engine.getBuoyData(button).done(function(data) {
+      Engine.getBuoyData(button).done((data) => {
         const details = data.rss.channel[0].item[0].description;
         Build.appendDataAfterFavoriteBuoy(button, details);
       });
