@@ -8,9 +8,10 @@ module.exports = {
     element.addClass("hidden");
   },
 
-  createAllBuoysHtml: function(links, buoys) {
-    let htmlBuoys = '<h1>Buoys within 100 miles of NYC</h1>';
-    if (buoys.length === 0) {
+  createAllBuoysHtml: function(links, buoys, distance) {
+    const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
+    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of NYC</h1>`;
+    if (buoys === undefined) {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';

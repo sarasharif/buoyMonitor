@@ -16,9 +16,10 @@ app.use(express.static(__dirname + '/public'));
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const buoyUrl = 'http://www.ndbc.noaa.gov/rss/ndbc_obs_search.php?lat=40N&lon=73W&radius=100';
 
 router.get('/allBuoys', (req, res) => {
+  const dist = req.query.distance;
+  const buoyUrl = `http://www.ndbc.noaa.gov/rss/ndbc_obs_search.php?lat=40N&lon=73W&radius=${dist}`;
   request(buoyUrl, function(err, response, xml) {
     parseString(xml, function (err, buoys) {
       res.json(buoys);

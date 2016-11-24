@@ -9,9 +9,10 @@ module.exports = {
     element.addClass("hidden");
   },
 
-  createAllBuoysHtml: function(links, buoys) {
-    let htmlBuoys = '<h1>Buoys within 100 miles of NYC</h1>';
-    if (buoys.length === 0) {
+  createAllBuoysHtml: function(links, buoys, distance) {
+    const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
+    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of NYC</h1>`;
+    if (buoys === undefined) {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
       htmlBuoys += '<div class="wrapper">';
@@ -72,6 +73,7 @@ const Build = require('./build');
 module.exports = {
 
   showAllBuoys: function() {
+    const distance = ($("input").val() || 100);
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
@@ -82,11 +84,12 @@ module.exports = {
       });
     });
 
-    Engine.getAllBuoys().done((data) => {
+    Engine.getAllBuoys(distance).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
+      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance);
       $("#allBuoys").html(htmlBuoys);
     });
+
   },
 
   showFavBuoys: function() {
@@ -130,9 +133,10 @@ module.exports = {
 },{"./build":1,"./engine":3}],3:[function(require,module,exports){
 module.exports = {
 
-  getAllBuoys: function () {
+  getAllBuoys: function (distance) {
     return $.get({
       url: "/api/allBuoys",
+      data: {distance: distance},
     });
   },
 
@@ -173,23 +177,27 @@ const Client = require('./client');
 $(document).ready( () => {
   Client.showAllBuoys();
 
-  $("#showAll").click( () =>  {
+  $("#showAll").click( () => {
     Client.showAllBuoys();
   });
 
-  $("#showFavs").click( () =>  {
+  $("#allBuoys").on("keyup", "#distance", (e) => {
+    if (e.which == 13) { Client.showAllBuoys(); }
+  });
+
+  $("#showFavs").click( () => {
     Client.showFavBuoys();
   });
 
-  $("#allBuoys").on("click", ".favtoggle", () =>  {
+  $("#allBuoys").on("click", ".favtoggle", () => {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".favtoggle", () =>  {
+  $("#favBuoys").on("click", ".favtoggle", () => {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".data-toggle", () =>  {
+  $("#favBuoys").on("click", ".data-toggle", () => {
     Client.toggleBuoyData();
   });
 

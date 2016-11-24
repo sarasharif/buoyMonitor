@@ -4,6 +4,7 @@ const Build = require('./build');
 module.exports = {
 
   showAllBuoys: function() {
+    const distance = ($("input").val() || 100);
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
@@ -14,11 +15,12 @@ module.exports = {
       });
     });
 
-    Engine.getAllBuoys().done((data) => {
+    Engine.getAllBuoys(distance).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
+      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance);
       $("#allBuoys").html(htmlBuoys);
     });
+
   },
 
   showFavBuoys: function() {
