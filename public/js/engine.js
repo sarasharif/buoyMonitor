@@ -1,34 +1,15 @@
 module.exports = {
 
-  getAllBuoys: function (links, callback) {
-    $.get({
+  getAllBuoys: function () {
+    return $.get({
       url: "/api/allBuoys",
-      success: function(data) {
-        callback(links, data);
-      },
     });
   },
 
-  getFavBuoys: function (callback) {
-    $.ajax({
+  getFavBuoys: function () {
+    return $.ajax({
       url: "/api/favBuoys",
-      success: function (data) {
-        callback(data);
-      }
     });
-  },
-
-  getFavLinks: function () {
-    let links = {};
-    $.ajax({
-      url: "/api/favBuoys",
-      success: function(buoys) {
-        buoys.forEach(function (buoy) {
-          links[buoy.link] = true;
-        });
-      }
-    });
-    return links;
   },
 
   createFavBuoy: function (button) {
@@ -47,14 +28,10 @@ module.exports = {
     });
   },
 
-  getBuoyData: function (button, callback) {
-    $.ajax({
+  getBuoyData: function (button) {
+    return $.ajax({
       url: "/api/buoyStats/",
       data: {'link': button.dataset.link},
-      success: function (data) {
-        const details = data.rss.channel[0].item[0].description;
-        callback(button, details);
-      }
     });
   },
 

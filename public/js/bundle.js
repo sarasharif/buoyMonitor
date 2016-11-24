@@ -52,14 +52,16 @@ module.exports = {
   },
 
   appendDataAfterFavoriteBuoy: function(button, data) {
-    $(button).text("-");
-    $(button).parent().next().remove(".buoyData");
-    $(button).parent().after('<div class="buoyData">'+data[0]+'</div>');
+    const element = $(button);
+    element.text("-");
+    element.parent().next().remove(".buoyData");
+    element.parent().after('<div class="buoyData">'+data[0]+'</div>');
   },
 
   removeDataFromFavoriteBuoy: function(button){
-    $(button).text("+");
-    $(button).parent().next().remove(".buoyData");
+    const element = $(button);
+    element.text("+");
+    element.parent().next().remove(".buoyData");
   },
 };
 
@@ -72,14 +74,29 @@ module.exports = {
   showAllBuoys: function() {
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
-    const links = Engine.getFavLinks();
-    Engine.getAllBuoys(links, this.appendAllBuoys);
+
+    let links = {};
+    Engine.getFavBuoys().done(function(data) {
+      data.forEach(function(buoy) {
+        links[buoy.link] = true;
+      });
+    });
+
+    Engine.getAllBuoys().done(function(data) {
+      const buoys = data.rss.channel[0].item;
+      const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
+      $("#allBuoys").html(htmlBuoys);
+    });
   },
 
   showFavBuoys: function() {
     Build.show($("#favBuoys"));
     Build.hide($("#allBuoys"));
-    Engine.getFavBuoys(this.appendFavBuoys);
+
+    Engine.getFavBuoys().done(function(data) {
+      const htmlBuoys = Build.createFavBuoysHtml(data);
+      $("#favBuoys").html(htmlBuoys);
+    });
   },
 
   toggleFavorite: function() {
@@ -95,24 +112,17 @@ module.exports = {
 
   toggleBuoyData: function() {
     const button = event.target;
+
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
-      Engine.getBuoyData(button, Build.appendDataAfterFavoriteBuoy);
+      Engine.getBuoyData(button).done(function(data) {
+        const details = data.rss.channel[0].item[0].description;
+        Build.appendDataAfterFavoriteBuoy(button, details);
+      });
     } else {
       $(button).addClass("closed");
       Build.removeDataFromFavoriteBuoy(button);
     }
-  },
-
-  appendAllBuoys: function(links, data) {
-    const buoys = data.rss.channel[0].item;
-    const htmlBuoys = Build.createAllBuoysHtml(links, buoys);
-    $("#allBuoys").html(htmlBuoys);
-  },
-
-  appendFavBuoys: function(buoys) {
-    const htmlBuoys = Build.createFavBuoysHtml(buoys);
-    $("#favBuoys").html(htmlBuoys);
   },
 
 };
@@ -120,35 +130,16 @@ module.exports = {
 },{"./build":1,"./engine":3}],3:[function(require,module,exports){
 module.exports = {
 
-  getAllBuoys: function (links, callback) {
-    $.get({
+  getAllBuoys: function () {
+    return $.get({
       url: "/api/allBuoys",
-      success: function(data) {
-        callback(links, data);
-      },
     });
   },
 
-  getFavBuoys: function (callback) {
-    $.ajax({
+  getFavBuoys: function () {
+    return $.ajax({
       url: "/api/favBuoys",
-      success: function (data) {
-        callback(data);
-      }
     });
-  },
-
-  getFavLinks: function () {
-    let links = {};
-    $.ajax({
-      url: "/api/favBuoys",
-      success: function(buoys) {
-        buoys.forEach(function (buoy) {
-          links[buoy.link] = true;
-        });
-      }
-    });
-    return links;
   },
 
   createFavBuoy: function (button) {
@@ -167,14 +158,10 @@ module.exports = {
     });
   },
 
-  getBuoyData: function (button, callback) {
-    $.ajax({
+  getBuoyData: function (button) {
+    return $.ajax({
       url: "/api/buoyStats/",
       data: {'link': button.dataset.link},
-      success: function (data) {
-        const details = data.rss.channel[0].item[0].description;
-        callback(button, details);
-      }
     });
   },
 

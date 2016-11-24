@@ -51,13 +51,15 @@ module.exports = {
   },
 
   appendDataAfterFavoriteBuoy: function(button, data) {
-    $(button).text("-");
-    $(button).parent().next().remove(".buoyData");
-    $(button).parent().after('<div class="buoyData">'+data[0]+'</div>');
+    const element = $(button);
+    element.text("-");
+    element.parent().next().remove(".buoyData");
+    element.parent().after('<div class="buoyData">'+data[0]+'</div>');
   },
 
   removeDataFromFavoriteBuoy: function(button){
-    $(button).text("+");
-    $(button).parent().next().remove(".buoyData");
+    const element = $(button);
+    element.text("+");
+    element.parent().next().remove(".buoyData");
   },
 };
