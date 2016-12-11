@@ -1,9 +1,9 @@
 module.exports = {
 
-  getAllBuoys: function (distance) {
+  getAllBuoys: function (distance, location) {
     return $.get({
       url: "/api/allBuoys",
-      data: {distance: distance},
+      data: {distance: distance, location: location},
     });
   },
 

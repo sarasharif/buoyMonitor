@@ -1,5 +1,26 @@
 module.exports = {
 
+  cities: function() {
+    return [
+      {
+        label: "New York City",
+        coords: "40N73W"
+      },
+      {
+        label: "Miami",
+        coords: "26N80W"
+      },
+      {
+        label: "Houston",
+        coords: "30N95W"
+      },
+      {
+        label: "Los Angeles",
+        coords: "34N118W"
+      },
+    ];
+  },
+
   show: function(element) {
     element.removeClass("hidden").html('<h1>...loading...</h1>');
   },
@@ -8,9 +29,18 @@ module.exports = {
     element.addClass("hidden");
   },
 
-  createAllBuoysHtml: function(links, buoys, distance) {
+  createAllBuoysHtml: function(links, buoys, distance, location) {
     const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
-    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of NYC</h1>`;
+
+    const cityInput = `<select id="location">
+                         <option value="40N73W">New York City</option>
+                         <option value="26N80W">Miami</option>
+                         <option value="30N95W">Houston</option>
+                         <option value="34N118W">Los Angeles</option>
+                       </select>`;
+
+    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of ${cityInput}</h1>`;
+
     if (buoys === undefined) {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
@@ -21,12 +51,12 @@ module.exports = {
         } else if (links[buoy.link[0]]) {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
-                          <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                          <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         </div>`;
         } else {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
-                          <button class="favtoggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                          <button class="fav-toggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         </div>`;
         }
       });
@@ -42,7 +72,7 @@ module.exports = {
       htmlBuoys += '<div class="wrapper">';
       buoys.forEach((buoy) => {
         htmlBuoys += `<div class="buoy">
-                        <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                        <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         <span>${buoy.title}</span>
                         <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                       </div>`;

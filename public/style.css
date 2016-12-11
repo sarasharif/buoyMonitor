@@ -4,11 +4,8 @@
   padding: 10px;
 }
 
-#section-wrapper{
-  position: relative;
-}
 
-nav, section {
+#nav, #allBuoys, #favBuoys {
   align-items: center;
   display: flex;
   justify-content: flex-start;
@@ -16,7 +13,11 @@ nav, section {
   width: 100%;
 }
 
-section {
+#section-wrapper{
+  position: relative;
+}
+
+#allBuoys, #favBuoys {
   position: absolute;
 }
 
@@ -24,20 +25,23 @@ section {
   visibility: hidden;
 }
 
-.favorite {
-  background-color: lightcoral;
-}
-
-button {
+/*all buttons*/
+#showAll, #showFavs, .fav-toggle, .data-toggle {
   background-color: white;
   border: 3px solid lightgray;
   border-radius: 4px;
   cursor: pointer;
 }
 
-input {
+.favorite {
+  background-color: lightcoral;
+}
+
+/*inputs*/
+#distance, #location {
   border: 2px dotted lightgray;
   border-radius: 4px;
+  background-color: white;
 }
 
 .buoy {
@@ -47,7 +51,7 @@ input {
   justify-content: space-between;
 }
 
-div.wrapper {
+.wrapper {
   display: flex;
   flex-direction: column;
 }

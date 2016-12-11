@@ -6,7 +6,9 @@ const parseString = require('xml2js').parseString;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://Sara:buoys@jello.modulusmongo.net:27017/O3nuzahu');
+var exports = module.exports = {};
+
+mongoose.connect('mongodb://sara:buoys@jello.modulusmongo.net:27017/Exosi6so');
 const Buoy = mongoose.model('Buoy', {
   link : String,
   title : String,
@@ -19,7 +21,9 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.get('/allBuoys', (req, res) => {
   const dist = req.query.distance;
-  const buoyUrl = `http://www.ndbc.noaa.gov/rss/ndbc_obs_search.php?lat=40N&lon=73W&radius=${dist}`;
+  const lat = req.query.location.slice(0,3);
+  const lon = req.query.location.slice(3);
+  const buoyUrl = `http://www.ndbc.noaa.gov/rss/ndbc_obs_search.php?lat=${lat}&lon=${lon}&radius=${dist}`;
   request(buoyUrl, function(err, response, xml) {
     parseString(xml, function (err, buoys) {
       res.json(buoys);
@@ -67,5 +71,11 @@ router.get('/buoyStats', (req, res) => {
 });
 
 app.use('/api', router);
-app.listen(process.env.PORT||8000);
-console.log("point browser to localhost:8000");
+var server = app.listen(process.env.PORT||8000, function() {
+
+  console.log("point browser to localhost:8000");
+});
+
+exports.closeServer = function(){
+  server.close();
+};

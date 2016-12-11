@@ -15,11 +15,11 @@ $(document).ready( () => {
     Client.showFavBuoys();
   });
 
-  $("#allBuoys").on("click", ".favtoggle", () => {
+  $("#allBuoys").on("click", ".fav-toggle", () => {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".favtoggle", () => {
+  $("#favBuoys").on("click", ".fav-toggle", () => {
     Client.toggleFavorite();
   });
 

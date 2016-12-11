@@ -1,6 +1,27 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
 
+  cities: function() {
+    return [
+      {
+        label: "New York City",
+        coords: "40N73W"
+      },
+      {
+        label: "Miami",
+        coords: "26N80W"
+      },
+      {
+        label: "Houston",
+        coords: "30N95W"
+      },
+      {
+        label: "Los Angeles",
+        coords: "34N118W"
+      },
+    ];
+  },
+
   show: function(element) {
     element.removeClass("hidden").html('<h1>...loading...</h1>');
   },
@@ -9,9 +30,18 @@ module.exports = {
     element.addClass("hidden");
   },
 
-  createAllBuoysHtml: function(links, buoys, distance) {
+  createAllBuoysHtml: function(links, buoys, distance, location) {
     const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
-    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of NYC</h1>`;
+
+    const cityInput = `<select id="location">
+                         <option value="40N73W">New York City</option>
+                         <option value="26N80W">Miami</option>
+                         <option value="30N95W">Houston</option>
+                         <option value="34N118W">Los Angeles</option>
+                       </select>`;
+
+    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of ${cityInput}</h1>`;
+
     if (buoys === undefined) {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
@@ -22,12 +52,12 @@ module.exports = {
         } else if (links[buoy.link[0]]) {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
-                          <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                          <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         </div>`;
         } else {
           htmlBuoys += `<div class="buoy">
                           <span>${buoy.title}</span>
-                          <button class="favtoggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                          <button class="fav-toggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         </div>`;
         }
       });
@@ -43,7 +73,7 @@ module.exports = {
       htmlBuoys += '<div class="wrapper">';
       buoys.forEach((buoy) => {
         htmlBuoys += `<div class="buoy">
-                        <button class="favtoggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
+                        <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                         <span>${buoy.title}</span>
                         <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                       </div>`;
@@ -73,7 +103,8 @@ const Build = require('./build');
 module.exports = {
 
   showAllBuoys: function() {
-    const distance = ($("input").val() || 100);
+    const distance = ($("#distance").val() || 100);
+    const location = ($("#location").val() || "40N73W");
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
@@ -84,10 +115,11 @@ module.exports = {
       });
     });
 
-    Engine.getAllBuoys(distance).done((data) => {
+    Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance);
+      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance, location);
       $("#allBuoys").html(htmlBuoys);
+      $("#location").val(location);
     });
 
   },
@@ -133,10 +165,10 @@ module.exports = {
 },{"./build":1,"./engine":3}],3:[function(require,module,exports){
 module.exports = {
 
-  getAllBuoys: function (distance) {
+  getAllBuoys: function (distance, location) {
     return $.get({
       url: "/api/allBuoys",
-      data: {distance: distance},
+      data: {distance: distance, location: location},
     });
   },
 
@@ -189,11 +221,11 @@ $(document).ready( () => {
     Client.showFavBuoys();
   });
 
-  $("#allBuoys").on("click", ".favtoggle", () => {
+  $("#allBuoys").on("click", ".fav-toggle", () => {
     Client.toggleFavorite();
   });
 
-  $("#favBuoys").on("click", ".favtoggle", () => {
+  $("#favBuoys").on("click", ".fav-toggle", () => {
     Client.toggleFavorite();
   });
 

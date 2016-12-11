@@ -4,7 +4,8 @@ const Build = require('./build');
 module.exports = {
 
   showAllBuoys: function() {
-    const distance = ($("input").val() || 100);
+    const distance = ($("#distance").val() || 100);
+    const location = ($("#location").val() || "40N73W");
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
@@ -15,10 +16,11 @@ module.exports = {
       });
     });
 
-    Engine.getAllBuoys(distance).done((data) => {
+    Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance);
+      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance, location);
       $("#allBuoys").html(htmlBuoys);
+      $("#location").val(location);
     });
 
   },
