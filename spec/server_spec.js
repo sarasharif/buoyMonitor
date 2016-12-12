@@ -1,6 +1,6 @@
-var request = require("request");
-var buoyMonitor = require("../server.js");
-var base_url = "http://localhost:8000/";
+const request = require("request");
+const buoyMonitor = require("../server.js");
+const base_url = "http://localhost:8000/";
 
 describe('buoyMonitor', function() {
 

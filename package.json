@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "watch": "watchify public/js/main.js -o public/js/bundle.js",
-    "test": "jasmine-node spec"
+    "test": "jasmine-node spec",
+    "watch": "watchify public/js/main.js -o public/js/bundle.js"
   },
   "author": "sara sharif",
   "license": "ISC",

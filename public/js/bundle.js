@@ -1,26 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
 
-  cities: function() {
+  CITIES: function() {
     return [
-      {
-        label: "New York City",
-        coords: "40N73W"
-      },
-      {
-        label: "Miami",
-        coords: "26N80W"
-      },
-      {
-        label: "Houston",
-        coords: "30N95W"
-      },
-      {
-        label: "Los Angeles",
-        coords: "34N118W"
-      },
+      { name: "New York City", coords: "40N73W" },
+      { name: "Miami", coords: "26N80W" },
+      { name: "Houston", coords: "30N95W" },
+      { name: "Los Angeles", coords: "34N118W" },
     ];
   },
+
 
   show: function(element) {
     element.removeClass("hidden").html('<h1>...loading...</h1>');
@@ -31,62 +20,64 @@ module.exports = {
   },
 
   searchBar: function(distance, location) {
-    const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
-    const cityOptions = this.cities().map((city) => `<option value="${city.coords}">${city.label}</option>`);
+    const distanceInput = `<input id="distance" type="number" min="10" max="300"
+                                                  value="${distance}"></input>`;
+    const cityOptions = this.CITIES().map((city) =>
+                `<option value="${city.coords}">${city.name}</option>`);
     const cityInput = `<select id="location">${cityOptions.join()}</select>`;
-    return `<h1>Buoys within ${distanceInput} miles of ${cityInput}<button id="search">🔎</button></h1>`;
+    return `<h1> Buoys within ${distanceInput} miles of ${cityInput}
+              <button id="search">🔎</button>
+            </h1>`;
   },
 
-  allBuoysHtml: function(links, buoys) {
-    let htmlBuoys = '';
-    if (buoys === undefined) {
-      return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
-    } else {
-      htmlBuoys += '<div class="wrapper">';
-      buoys.forEach((buoy) => {
-        if (buoy.title[0].toUpperCase() === "SHIP") {
-          htmlBuoys += "";
-        } else if (links[buoy.link[0]]) {
-          htmlBuoys += `<div class="buoy">
-                          <span>${buoy.title}</span>
-                          <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
-                        </div>`;
-        } else {
-          htmlBuoys += `<div class="buoy">
-                          <span>${buoy.title}</span>
-                          <button class="fav-toggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
-                        </div>`;
-        }
-      });
-      return htmlBuoys += '</div>';
+  allBuoys: function(favorites, buoys) {
+    if (buoys === undefined) '<h2>...there are no buoys here...</h2>';
+    let html = '<div class="wrapper">';
+
+    for (let buoy of buoys) {
+      if (buoy.title[0].toUpperCase() === "SHIP") {
+        continue;
+      } else if (favorites[buoy.link[0]]) {
+        html += `<div class="buoy">
+                   <span>${buoy.title}</span>
+                   <button class="fav-toggle favorite" data-link='${buoy.link}'
+                                          data-title='${buoy.title}'>♥</button>
+                 </div>`;
+      } else {
+        html += `<div class="buoy">
+                   <span>${buoy.title}</span>
+                   <button class="fav-toggle" data-link='${buoy.link}'
+                                          data-title='${buoy.title}'>♥</button>
+                 </div>`;
+      }
     }
+    return html += '</div>';
   },
 
-  favBuoysHtml: function(buoys) {
-    let htmlBuoys = '<h1>Favorite Buoys</h1>';
-    if (buoys.length === 0) {
-      return htmlBuoys += '<h2>... you don\'t have any favorite buoys ...</h2>';
-    } else {
-      htmlBuoys += '<div class="wrapper">';
-      buoys.forEach((buoy) => {
-        htmlBuoys += `<div class="buoy">
-                        <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
-                        <span>${buoy.title}</span>
-                        <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
-                      </div>`;
-      });
-      return htmlBuoys += '</div>';
+  favBuoys: function(buoys) {
+    let html = '<h1>Favorite Buoys</h1>';
+    if (buoys.length === 0) html += `<h2>...you have no favorite buoys...</h2>`;
+    html += '<div class="wrapper">';
+    for (let buoy of buoys) {
+      html += `<div class="buoy">
+                 <button class="fav-toggle favorite" data-link='${buoy.link}'
+                                          data-title='${buoy.title}'>♥</button>
+                 <span>${buoy.title}</span>
+                 <button class="data-toggle closed"
+                                            data-link='${buoy.link}'>+</button>
+               </div>`;
     }
+    return html += '</div>';
   },
 
-  appendDataAfterFavoriteBuoy: function(button, data) {
+  showReadings: function(button, data) {
     const element = $(button);
     element.text("-");
     element.parent().next().remove(".buoyData");
     element.parent().after(`<div class="buoyData">${data[0]}</div>`);
   },
 
-  removeDataFromFavoriteBuoy: function(button){
+  hideReadings: function(button){
     const element = $(button);
     element.text("+");
     element.parent().next().remove(".buoyData");
@@ -105,17 +96,17 @@ module.exports = {
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
-    let links = {};
+    let favorites = {};
     Engine.getFavBuoys().done((data) => {
-      data.forEach((buoy) => {
-        links[buoy.link] = true;
-      });
+      for (let buoy of data) {
+        favorites[buoy.link] = true;
+      }
     });
 
     Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
       const searchBar = Build.searchBar(distance, location);
-      const htmlBuoys = Build.allBuoysHtml(links, buoys);
+      const htmlBuoys = Build.allBuoys(favorites, buoys);
       $("#allBuoys").html(searchBar + htmlBuoys);
       $("#location").val(location);
     });
@@ -127,7 +118,7 @@ module.exports = {
     Build.hide($("#allBuoys"));
 
     Engine.getFavBuoys().done((data) => {
-      const htmlBuoys = Build.favBuoysHtml(data);
+      const htmlBuoys = Build.favBuoys(data);
       $("#favBuoys").html(htmlBuoys);
     });
   },
@@ -143,18 +134,17 @@ module.exports = {
     }
   },
 
-  toggleBuoyData: function() {
+  toggleBuoyData: function(e) {
     const button = event.target;
-
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
       Engine.getBuoyData(button).done((data) => {
-        const details = data.rss.channel[0].item[0].description;
-        Build.appendDataAfterFavoriteBuoy(button, details);
+        const readings = data.rss.channel[0].item[0].description;
+        Build.showReadings(button, readings);
       });
     } else {
       $(button).addClass("closed");
-      Build.removeDataFromFavoriteBuoy(button);
+      Build.hideReadings(button);
     }
   },
 
@@ -166,12 +156,12 @@ module.exports = {
   getAllBuoys: function (distance, location) {
     return $.get({
       url: "/api/allBuoys",
-      data: {distance: distance, location: location},
+      data: { distance: distance, location: location },
     });
   },
 
   getFavBuoys: function () {
-    return $.ajax({
+    return $.get({
       url: "/api/favBuoys",
     });
   },
@@ -180,29 +170,32 @@ module.exports = {
     $.ajax({
       url: "/api/favBuoys/",
       method: 'POST',
-      data: {'link': button.dataset.link, 'title': button.dataset.title},
+      data: {
+              'link': button.dataset.link,
+              'title': button.dataset.title
+            },
     });
   },
 
   deleteFavBuoy: function (button) {
     $.ajax({
       method: 'DELETE',
-      data: {'link': button.dataset.link},
       url: "/api/favBuoys/",
+      data: { 'link': button.dataset.link },
     });
   },
 
   getBuoyData: function (button) {
     return $.ajax({
       url: "/api/buoyStats/",
-      data: {'link': button.dataset.link},
+      data: { 'link': button.dataset.link },
     });
   },
 
 };
 
 },{}],4:[function(require,module,exports){
-const Client = require('./client');
+let Client = require('./client');
 
 $(document).ready( () => {
   Client.showAllBuoys();

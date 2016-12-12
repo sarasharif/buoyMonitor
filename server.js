@@ -6,16 +6,22 @@ const parseString = require('xml2js').parseString;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-var exports = module.exports = {};
+const exports = module.exports = {};
 
 const mongodbUri = 'mongodb://sara:buoys@jello.modulusmongo.net:27017/Exosi6so'
-const mongodbOptions = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
-                        replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } } };
+const mongodbOptions = { server:
+                         { socketOptions:
+                           { keepAlive: 300000,
+                             connectTimeoutMS: 30000 } },
+                         replset:
+                         { socketOptions:
+                           { keepAlive: 300000,
+                             connectTimeoutMS: 30000 } }
+                       };
 
-// handle timeout errors
 mongoose.connect(mongodbUri, mongodbOptions);
-const connection = mongoose.connection;
-connection.on('error', console.error.bind(console, 'connection error:'));
+const conn = mongoose.connection;
+conn.on('error', console.error.bind(console, 'connection error:'));
 
 const Buoy = mongoose.model('Buoy', {
   link : String,
@@ -72,7 +78,7 @@ router.delete('/favbuoys', (req, res) => {
 
 router.get('/buoyStats', (req, res) => {
   const station_id = req.query.link.slice(-5);
-  const url = `http://www.ndbc.noaa.gov/data/latest_obs/${station_id}.rss`
+  const url = `http://www.ndbc.noaa.gov/data/latest_obs/${station_id}.rss`;
   request(url, function(err, response, xml) {
     parseString(xml, function (err, buoy) {
       if (err) { res.next(err); }
@@ -82,7 +88,7 @@ router.get('/buoyStats', (req, res) => {
 });
 
 app.use('/api', router);
-var server = app.listen(process.env.PORT||8000, function() {
+const server = app.listen(process.env.PORT || 8000, function() {
   console.log("point browser to localhost:8000");
 });
 

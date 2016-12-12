@@ -9,17 +9,17 @@ module.exports = {
     Build.show($("#allBuoys"));
     Build.hide($("#favBuoys"));
 
-    let links = {};
+    let favorites = {};
     Engine.getFavBuoys().done((data) => {
-      data.forEach((buoy) => {
-        links[buoy.link] = true;
-      });
+      for (let buoy of data) {
+        favorites[buoy.link] = true;
+      }
     });
 
     Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
       const searchBar = Build.searchBar(distance, location);
-      const htmlBuoys = Build.allBuoysHtml(links, buoys);
+      const htmlBuoys = Build.allBuoys(favorites, buoys);
       $("#allBuoys").html(searchBar + htmlBuoys);
       $("#location").val(location);
     });
@@ -31,7 +31,7 @@ module.exports = {
     Build.hide($("#allBuoys"));
 
     Engine.getFavBuoys().done((data) => {
-      const htmlBuoys = Build.favBuoysHtml(data);
+      const htmlBuoys = Build.favBuoys(data);
       $("#favBuoys").html(htmlBuoys);
     });
   },
@@ -47,18 +47,17 @@ module.exports = {
     }
   },
 
-  toggleBuoyData: function() {
+  toggleBuoyData: function(e) {
     const button = event.target;
-
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
       Engine.getBuoyData(button).done((data) => {
-        const details = data.rss.channel[0].item[0].description;
-        Build.appendDataAfterFavoriteBuoy(button, details);
+        const readings = data.rss.channel[0].item[0].description;
+        Build.showReadings(button, readings);
       });
     } else {
       $(button).addClass("closed");
-      Build.removeDataFromFavoriteBuoy(button);
+      Build.hideReadings(button);
     }
   },
 

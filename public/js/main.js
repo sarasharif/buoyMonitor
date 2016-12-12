@@ -1,4 +1,4 @@
-const Client = require('./client');
+let Client = require('./client');
 
 $(document).ready( () => {
   Client.showAllBuoys();
