@@ -11,6 +11,10 @@ $(document).ready( () => {
     if (e.which == 13) { Client.showAllBuoys(); }
   });
 
+  $("#allBuoys").on("click", "#search", () => {
+    Client.showAllBuoys();
+  });
+
   $("#showFavs").click( () => {
     Client.showFavBuoys();
   });

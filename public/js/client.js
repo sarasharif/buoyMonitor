@@ -18,8 +18,9 @@ module.exports = {
 
     Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance, location);
-      $("#allBuoys").html(htmlBuoys);
+      const searchBar = Build.searchBar(distance, location);
+      const htmlBuoys = Build.allBuoysHtml(links, buoys);
+      $("#allBuoys").html(searchBar + htmlBuoys);
       $("#location").val(location);
     });
 
@@ -30,7 +31,7 @@ module.exports = {
     Build.hide($("#allBuoys"));
 
     Engine.getFavBuoys().done((data) => {
-      const htmlBuoys = Build.createFavBuoysHtml(data);
+      const htmlBuoys = Build.favBuoysHtml(data);
       $("#favBuoys").html(htmlBuoys);
     });
   },

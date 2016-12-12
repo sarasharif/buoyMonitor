@@ -4,8 +4,9 @@
   "description": "surfline challenge",
   "main": "server.js",
   "scripts": {
-    "test": "jasmine-node spec",
-    "start": "node server.js"
+    "start": "node server.js",
+    "watch": "watchify public/js/main.js -o public/js/bundle.js",
+    "test": "jasmine-node spec"
   },
   "author": "sara sharif",
   "license": "ISC",
@@ -19,7 +20,7 @@
   "devDependencies": {
     "browserify": "^13.1.1",
     "watchify": "^3.7.0",
-    "mocha": "^3.2.0",
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "mocha": "^3.2.0"
   }
 }

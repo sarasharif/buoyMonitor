@@ -1,5 +1,4 @@
 * {
-  color: slate;
   margin: 4px;
   padding: 10px;
 }
@@ -25,24 +24,25 @@
   visibility: hidden;
 }
 
-/*all buttons*/
-#showAll, #showFavs, .fav-toggle, .data-toggle {
+/*all the buttons*/
+#showAll, #showFavs, #search, .fav-toggle, .data-toggle {
   background-color: white;
   border: 3px solid lightgray;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.favorite {
-  background-color: lightcoral;
-}
-
-/*inputs*/
+/*search bar*/
 #distance, #location {
   border: 2px dotted lightgray;
   border-radius: 4px;
   background-color: white;
 }
+
+.favorite {
+  background-color: lightcoral;
+}
+
 
 .buoy {
   display: flex;

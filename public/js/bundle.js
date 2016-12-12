@@ -30,18 +30,15 @@ module.exports = {
     element.addClass("hidden");
   },
 
-  createAllBuoysHtml: function(links, buoys, distance, location) {
+  searchBar: function(distance, location) {
     const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}"></input>`;
+    const cityOptions = this.cities().map((city) => `<option value="${city.coords}">${city.label}</option>`);
+    const cityInput = `<select id="location">${cityOptions.join()}</select>`;
+    return `<h1>Buoys within ${distanceInput} miles of ${cityInput}<button id="search">🔎</button></h1>`;
+  },
 
-    const cityInput = `<select id="location">
-                         <option value="40N73W">New York City</option>
-                         <option value="26N80W">Miami</option>
-                         <option value="30N95W">Houston</option>
-                         <option value="34N118W">Los Angeles</option>
-                       </select>`;
-
-    let htmlBuoys = `<h1>Buoys within ${distanceInput} miles of ${cityInput}</h1>`;
-
+  allBuoysHtml: function(links, buoys) {
+    let htmlBuoys = '';
     if (buoys === undefined) {
       return htmlBuoys += '<h2>...there are no buoys in this search radius...</h2>';
     } else {
@@ -65,7 +62,7 @@ module.exports = {
     }
   },
 
-  createFavBuoysHtml: function(buoys) {
+  favBuoysHtml: function(buoys) {
     let htmlBuoys = '<h1>Favorite Buoys</h1>';
     if (buoys.length === 0) {
       return htmlBuoys += '<h2>... you don\'t have any favorite buoys ...</h2>';
@@ -86,7 +83,7 @@ module.exports = {
     const element = $(button);
     element.text("-");
     element.parent().next().remove(".buoyData");
-    element.parent().after('<div class="buoyData">'+data[0]+'</div>');
+    element.parent().after(`<div class="buoyData">${data[0]}</div>`);
   },
 
   removeDataFromFavoriteBuoy: function(button){
@@ -117,8 +114,9 @@ module.exports = {
 
     Engine.getAllBuoys(distance, location).done((data) => {
       const buoys = data.rss.channel[0].item;
-      const htmlBuoys = Build.createAllBuoysHtml(links, buoys, distance, location);
-      $("#allBuoys").html(htmlBuoys);
+      const searchBar = Build.searchBar(distance, location);
+      const htmlBuoys = Build.allBuoysHtml(links, buoys);
+      $("#allBuoys").html(searchBar + htmlBuoys);
       $("#location").val(location);
     });
 
@@ -129,7 +127,7 @@ module.exports = {
     Build.hide($("#allBuoys"));
 
     Engine.getFavBuoys().done((data) => {
-      const htmlBuoys = Build.createFavBuoysHtml(data);
+      const htmlBuoys = Build.favBuoysHtml(data);
       $("#favBuoys").html(htmlBuoys);
     });
   },
@@ -215,6 +213,10 @@ $(document).ready( () => {
 
   $("#allBuoys").on("keyup", "#distance", (e) => {
     if (e.which == 13) { Client.showAllBuoys(); }
+  });
+
+  $("#allBuoys").on("click", "#search", () => {
+    Client.showAllBuoys();
   });
 
   $("#showFavs").click( () => {
