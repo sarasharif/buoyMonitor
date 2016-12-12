@@ -9,16 +9,10 @@ const bodyParser = require('body-parser');
 var exports = module.exports = {};
 
 const mongodbUri = 'mongodb://sara:buoys@jello.modulusmongo.net:27017/Exosi6so'
-const mongodbOptions = { server:
-                  { socketOptions:
-                    { keepAlive: 300000, connectTimeoutMS: 30000 }
-                  },
-                  replset:
-                    { socketOptions:
-                      { keepAlive: 300000, connectTimeoutMS : 30000 }
-                    }
-                  };
-                  
+const mongodbOptions = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
+                        replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } } };
+
+// handle timeout errors
 mongoose.connect(mongodbUri, mongodbOptions);
 const connection = mongoose.connection;
 connection.on('error', console.error.bind(console, 'connection error:'));
