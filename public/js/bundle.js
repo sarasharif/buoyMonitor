@@ -7,9 +7,10 @@ module.exports = {
       { name: "Miami", coords: "26N80W" },
       { name: "Houston", coords: "30N95W" },
       { name: "Los Angeles", coords: "34N118W" },
+      // add cities and their geographical coordinates below:
+      // { name: "placeholder", coords: "placeholder" },
     ];
   },
-
 
   show: function(element) {
     element.removeClass("hidden").html('<h1>...loading...</h1>');
@@ -20,18 +21,21 @@ module.exports = {
   },
 
   searchBar: function(distance, location) {
-    const distanceInput = `<input id="distance" type="number" min="10" max="300"
-                                                  value="${distance}"></input>`;
-    const cityOptions = this.CITIES().map((city) =>
-                `<option value="${city.coords}">${city.name}</option>`);
+    const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}">`;
+    const cityOptions = this.CITIES().map(city => (
+      `<option value="${city.coords}">${city.name}</option>`
+    ));
     const cityInput = `<select id="location">${cityOptions.join()}</select>`;
-    return `<h1> Buoys within ${distanceInput} miles of ${cityInput}
-              <button id="search">🔎</button>
-            </h1>`;
+    return `<form>
+              Buoys within ${distanceInput} miles of ${cityInput}
+              <input type="submit" value="🔎" id="search">
+            </form>`;
   },
 
   allBuoys: function(favorites, buoys) {
-    if (buoys === undefined) '<h2>...there are no buoys here...</h2>';
+    if (buoys === undefined) {
+      return '<h2>...there are no buoys here...</h2>';
+    }
     let html = '<div class="wrapper">';
 
     for (let buoy of buoys) {
@@ -40,14 +44,12 @@ module.exports = {
       } else if (favorites[buoy.link[0]]) {
         html += `<div class="buoy">
                    <span>${buoy.title}</span>
-                   <button class="fav-toggle favorite" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                   <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  </div>`;
       } else {
         html += `<div class="buoy">
                    <span>${buoy.title}</span>
-                   <button class="fav-toggle" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                   <button class="fav-toggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  </div>`;
       }
     }
@@ -56,31 +58,29 @@ module.exports = {
 
   favBuoys: function(buoys) {
     let html = '<h1>Favorite Buoys</h1>';
-    if (buoys.length === 0) html += `<h2>...you have no favorite buoys...</h2>`;
+    if (buoys.length === 0) html += `<h2>...you have noo favorite buoys...</h2>`;
     html += '<div class="wrapper">';
     for (let buoy of buoys) {
       html += `<div class="buoy">
-                 <button class="fav-toggle favorite" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                 <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  <span>${buoy.title}</span>
-                 <button class="data-toggle closed"
-                                            data-link='${buoy.link}'>+</button>
+                 <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                </div>`;
     }
     return html += '</div>';
   },
 
   showReadings: function(button, data) {
-    const element = $(button);
-    element.text("-");
-    element.parent().next().remove(".buoyData");
-    element.parent().after(`<div class="buoyData">${data[0]}</div>`);
+    const $element = $(button);
+    $element.text("-");
+    $element.parent().next().remove(".buoyData");
+    $element.parent().after(`<div class="buoyData">${data[0]}</div>`);
   },
 
-  hideReadings: function(button){
-    const element = $(button);
-    element.text("+");
-    element.parent().next().remove(".buoyData");
+  hideReadings: function(button) {
+    const $element = $(button);
+    $element.text("+");
+    $element.parent().next().remove(".buoyData");
   },
 };
 
@@ -134,7 +134,7 @@ module.exports = {
     }
   },
 
-  toggleBuoyData: function(e) {
+  toggleBuoyData: function() {
     const button = event.target;
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");
@@ -156,7 +156,7 @@ module.exports = {
   getAllBuoys: function (distance, location) {
     return $.get({
       url: "/api/allBuoys",
-      data: { distance: distance, location: location },
+      data: { distance, location },
     });
   },
 
@@ -167,28 +167,29 @@ module.exports = {
   },
 
   createFavBuoy: function (button) {
+    const link = button.dataset.link;
+    const title = button.dataset.title;
     $.ajax({
       url: "/api/favBuoys/",
       method: 'POST',
-      data: {
-              'link': button.dataset.link,
-              'title': button.dataset.title
-            },
+      data: { link, title },
     });
   },
 
   deleteFavBuoy: function (button) {
+    const link = button.dataset.link;
     $.ajax({
       method: 'DELETE',
       url: "/api/favBuoys/",
-      data: { 'link': button.dataset.link },
+      data: { link },
     });
   },
 
   getBuoyData: function (button) {
+    const link = button.dataset.link;
     return $.ajax({
       url: "/api/buoyStats/",
-      data: { 'link': button.dataset.link },
+      data: { link },
     });
   },
 
@@ -196,38 +197,41 @@ module.exports = {
 
 },{}],4:[function(require,module,exports){
 let Client = require('./client');
+// $(document).ready(() => {
 
-$(document).ready( () => {
-  Client.showAllBuoys();
+(function(buoyFinder){
+   buoyFinder(window.jQuery, window, document);
+ }(($, window, document) => {
+    $(() => {
 
-  $("#showAll").click( () => {
     Client.showAllBuoys();
-  });
 
-  $("#allBuoys").on("keyup", "#distance", (e) => {
-    if (e.which == 13) { Client.showAllBuoys(); }
-  });
+    $("#showAll").click(() => {
+      Client.showAllBuoys();
+    });
 
-  $("#allBuoys").on("click", "#search", () => {
-    Client.showAllBuoys();
-  });
+    $("#allBuoys").on("submit", "form", () => {
+      event.preventDefault();
+      Client.showAllBuoys();
+    });
 
-  $("#showFavs").click( () => {
-    Client.showFavBuoys();
-  });
+    $("#showFavs").click(() => {
+      Client.showFavBuoys();
+    });
 
-  $("#allBuoys").on("click", ".fav-toggle", () => {
-    Client.toggleFavorite();
-  });
+    $("#allBuoys").on("click", ".fav-toggle", () => {
+      Client.toggleFavorite();
+    });
 
-  $("#favBuoys").on("click", ".fav-toggle", () => {
-    Client.toggleFavorite();
-  });
+    $("#favBuoys").on("click", ".fav-toggle", () => {
+      Client.toggleFavorite();
+    });
 
-  $("#favBuoys").on("click", ".data-toggle", () => {
-    Client.toggleBuoyData();
-  });
+    $("#favBuoys").on("click", ".data-toggle", () => {
+      Client.toggleBuoyData();
+    });
 
-});
+  });
+}));
 
 },{"./client":2}]},{},[4]);

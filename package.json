@@ -4,23 +4,19 @@
   "description": "surfline challenge",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "jasmine-node spec",
-    "watch": "watchify public/js/main.js -o public/js/bundle.js"
+    "start": "node server.js"
   },
   "author": "sara sharif",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "mongoose": "^4.6.8",
-    "request": "^2.78.0",
-    "xml2js": "^0.4.17"
+    "body-parser": "1.15.2",
+    "express": "4.14.0",
+    "mongoose": "4.7.4",
+    "request": "2.79.0",
+    "xml2js": "0.4.17"
   },
   "devDependencies": {
-    "browserify": "^13.1.1",
-    "watchify": "^3.7.0",
-    "jasmine-node": "^1.14.5",
-    "mocha": "^3.2.0"
+    "browserify": "13.1.1",
+    "watchify": "3.8.0"
   }
 }

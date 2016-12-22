@@ -6,9 +6,8 @@ const parseString = require('xml2js').parseString;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const exports = module.exports = {};
 
-const mongodbUri = 'mongodb://sara:buoys@jello.modulusmongo.net:27017/Exosi6so'
+const mongodbUri = 'mongodb://Sara:buoys@jello.modulusmongo.net:27017/O3nuzahu'
 const mongodbOptions = { server:
                          { socketOptions:
                            { keepAlive: 300000,
@@ -91,7 +90,3 @@ app.use('/api', router);
 const server = app.listen(process.env.PORT || 8000, function() {
   console.log("point browser to localhost:8000");
 });
-
-exports.closeServer = function(){
-  server.close();
-};

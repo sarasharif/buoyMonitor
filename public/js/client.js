@@ -47,7 +47,7 @@ module.exports = {
     }
   },
 
-  toggleBuoyData: function(e) {
+  toggleBuoyData: function() {
     const button = event.target;
     if (button.classList.contains("closed")) {
       $(button).removeClass("closed");

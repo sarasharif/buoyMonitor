@@ -9,7 +9,6 @@ module.exports = {
     ];
   },
 
-
   show: function(element) {
     element.removeClass("hidden").html('<h1>...loading...</h1>');
   },
@@ -19,18 +18,21 @@ module.exports = {
   },
 
   searchBar: function(distance, location) {
-    const distanceInput = `<input id="distance" type="number" min="10" max="300"
-                                                  value="${distance}"></input>`;
-    const cityOptions = this.CITIES().map((city) =>
-                `<option value="${city.coords}">${city.name}</option>`);
+    const distanceInput = `<input id="distance" type="number" min="10" max="300" value="${distance}">`;
+    const cityOptions = this.CITIES().map(city => (
+      `<option value="${city.coords}">${city.name}</option>`
+    ));
     const cityInput = `<select id="location">${cityOptions.join()}</select>`;
-    return `<h1> Buoys within ${distanceInput} miles of ${cityInput}
-              <button id="search">🔎</button>
-            </h1>`;
+    return `<form>
+              Buoys within ${distanceInput} miles of ${cityInput}
+              <input type="submit" value="🔎" id="search">
+            </form>`;
   },
 
   allBuoys: function(favorites, buoys) {
-    if (buoys === undefined) '<h2>...there are no buoys here...</h2>';
+    if (buoys === undefined) {
+      return '<h2>...there are no buoys here...</h2>';
+    }
     let html = '<div class="wrapper">';
 
     for (let buoy of buoys) {
@@ -39,14 +41,12 @@ module.exports = {
       } else if (favorites[buoy.link[0]]) {
         html += `<div class="buoy">
                    <span>${buoy.title}</span>
-                   <button class="fav-toggle favorite" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                   <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  </div>`;
       } else {
         html += `<div class="buoy">
                    <span>${buoy.title}</span>
-                   <button class="fav-toggle" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                   <button class="fav-toggle" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  </div>`;
       }
     }
@@ -55,30 +55,28 @@ module.exports = {
 
   favBuoys: function(buoys) {
     let html = '<h1>Favorite Buoys</h1>';
-    if (buoys.length === 0) html += `<h2>...you have no favorite buoys...</h2>`;
+    if (buoys.length === 0) html += `<h2>...you have noo favorite buoys...</h2>`;
     html += '<div class="wrapper">';
     for (let buoy of buoys) {
       html += `<div class="buoy">
-                 <button class="fav-toggle favorite" data-link='${buoy.link}'
-                                          data-title='${buoy.title}'>♥</button>
+                 <button class="fav-toggle favorite" data-link='${buoy.link}' data-title='${buoy.title}'>♥</button>
                  <span>${buoy.title}</span>
-                 <button class="data-toggle closed"
-                                            data-link='${buoy.link}'>+</button>
+                 <button class="data-toggle closed" data-link='${buoy.link}'>+</button>
                </div>`;
     }
     return html += '</div>';
   },
 
   showReadings: function(button, data) {
-    const element = $(button);
-    element.text("-");
-    element.parent().next().remove(".buoyData");
-    element.parent().after(`<div class="buoyData">${data[0]}</div>`);
+    const $element = $(button);
+    $element.text("-");
+    $element.parent().next().remove(".buoyData");
+    $element.parent().after(`<div class="buoyData">${data[0]}</div>`);
   },
 
-  hideReadings: function(button){
-    const element = $(button);
-    element.text("+");
-    element.parent().next().remove(".buoyData");
+  hideReadings: function(button) {
+    const $element = $(button);
+    $element.text("+");
+    $element.parent().next().remove(".buoyData");
   },
 };

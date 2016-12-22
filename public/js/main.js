@@ -1,34 +1,37 @@
 let Client = require('./client');
+// $(document).ready(() => {
 
-$(document).ready( () => {
-  Client.showAllBuoys();
+(function(buoyFinder){
+   buoyFinder(window.jQuery, window, document);
+ }(($, window, document) => {
+    $(() => {
 
-  $("#showAll").click( () => {
     Client.showAllBuoys();
-  });
 
-  $("#allBuoys").on("keyup", "#distance", (e) => {
-    if (e.which == 13) { Client.showAllBuoys(); }
-  });
+    $("#showAll").click(() => {
+      Client.showAllBuoys();
+    });
 
-  $("#allBuoys").on("click", "#search", () => {
-    Client.showAllBuoys();
-  });
+    $("#allBuoys").on("submit", "form", () => {
+      event.preventDefault();
+      Client.showAllBuoys();
+    });
 
-  $("#showFavs").click( () => {
-    Client.showFavBuoys();
-  });
+    $("#showFavs").click(() => {
+      Client.showFavBuoys();
+    });
 
-  $("#allBuoys").on("click", ".fav-toggle", () => {
-    Client.toggleFavorite();
-  });
+    $("#allBuoys").on("click", ".fav-toggle", () => {
+      Client.toggleFavorite();
+    });
 
-  $("#favBuoys").on("click", ".fav-toggle", () => {
-    Client.toggleFavorite();
-  });
+    $("#favBuoys").on("click", ".fav-toggle", () => {
+      Client.toggleFavorite();
+    });
 
-  $("#favBuoys").on("click", ".data-toggle", () => {
-    Client.toggleBuoyData();
-  });
+    $("#favBuoys").on("click", ".data-toggle", () => {
+      Client.toggleBuoyData();
+    });
 
-});
+  });
+}));
