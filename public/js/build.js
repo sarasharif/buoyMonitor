@@ -55,7 +55,7 @@ module.exports = {
 
   favBuoys: function(buoys) {
     let html = '<h1>Favorite Buoys</h1>';
-    if (buoys.length === 0) html += `<h2>...you have noo favorite buoys...</h2>`;
+    if (buoys.length === 0) html += `<h2>...you have no favorite buoys...</h2>`;
     html += '<div class="wrapper">';
     for (let buoy of buoys) {
       html += `<div class="buoy">
